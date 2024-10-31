@@ -9,7 +9,7 @@ class Competitor {
     String showResult() {
         def result = ''
         for (def t : tournaments) {
-            result = "==$t.title==\n"
+            result += "==$t.title==\n"
             for (def f : t.fights) {
                 result += f.showResult(name)
             }

@@ -9,15 +9,13 @@ import org.jsoup.select.Elements
 @Slf4j
 class KotPParser {
 
-    static void parse() {
-        //Document doc = Jsoup.connect("https://shakasports.com/brackets/228/age_division/1363/division_id/0/sex/-1/weight_division/-1").get()
-        Document doc = Jsoup.connect("https://shakasports.com/brackets/819").get()
-        //Document doc = Jsoup.connect("https://shakasports.com/brackets/819/age_division/7336/division_id/0/sex/0/weight_division/1").get()
+    static void parse(KotPTournaments tournamentUrl, HashSet<Competitor> competitors) {
+        Document doc = Jsoup.connect(tournamentUrl.url).get()
 
         def title = doc.select('main').select('h1[class="section-title"]').text()
         def brackets = doc.select('div[class="brackets"]')
 
-        def competitors = new HashSet<Competitor>()
+        //def competitors = new HashSet<Competitor>()
         def fights = new HashSet<Fight>()
 
         def tournament = new Tournament()
@@ -51,9 +49,9 @@ class KotPParser {
 
             fights.findAll { it.winner == c.name || it.loser == c.name }.each { twice.fights.add(it) }
 
-            c.tournaments.add(twice)
-
-            println "$c.name ($c.teams) \n${c.showResult()}"
+            if (twice.fights) {
+                c.tournaments.add(twice)
+            }
         }
     }
 
